@@ -117,13 +117,13 @@ namespace Tt1
             {
                 _days[7] = false;
             }
-            else if (s[offset + 7] == ' ')
+            else if (s[offset + 7] == 'X')
             {
                 _days[7] = true;
             }
             else
             {
-                throw new Exception($"{s[7]} is an invalid character in the days string - should be '0' or '1'");
+                throw new Exception($"{s[offset + 7]} is an invalid character in the days string - should be '0' or '1'");
             }
         }
     }
@@ -133,14 +133,63 @@ namespace Tt1
         {
             try
             {
-                var filename = "s:\\ttisf968.mca";
+                var tipLocToCrs = new Dictionary<string, string>();
+                var startTime = DateTime.Now;
+                var filename = "s:\\ttisf772.mca";
+                var count = 0;
+                var linenumber = 0;
+                bool validRecord = false;
+                string currentBSRecord;
+
                 foreach (var line in File.ReadLines(filename))
                 {
-                    if (line.Substring(0, 2) == "BS")
+                    try
                     {
-                        var bs = new BSRecord(line);
+                        if (line.Length > 2 && line.Substring(0, 2) == "TI")
+                        {
+                            var tiploc = line.Substring(2, 7);
+                            var crs = line.Substring(53, 3);
+                            tipLocToCrs.Add(tiploc, crs);
+                        }
+                        else if (line.Substring(0, 2) == "BS")
+                        {
+                            var bs = new BSRecord(line);
+                            if (bs.RunsTo > DateTime.Today)
+                            {
+                                validRecord = true;
+                                currentBSRecord = line;
+                                count++;
+                            }
+                        }
+                        if (validRecord)
+                        {
+                            if (line.Substring(0, 2) == "LO")
+                            {
+                            }
+                            else if (line.Substring(0, 2) == "LI")
+                            {
+                            }
+                            else if (line.Substring(0, 2) == "CR")
+                            {
+                            }
+                            else if (line.Substring(0, 2) == "LT")
+                            {
+                                validRecord = false;
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Error at line {linenumber + 1} : {e.Message}");
+                    }
+                    linenumber++;
+                    if (linenumber % 100000 == 99999)
+                    {
+                        Console.WriteLine($"{linenumber + 1}");
                     }
                 }
+                var timetaken = DateTime.Now - startTime;
+                Console.WriteLine($"count it {count} - time was {timetaken.TotalSeconds} seconds");
             }
             catch (Exception ex)
             {
