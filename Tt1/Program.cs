@@ -139,7 +139,9 @@ namespace Tt1
                 var count = 0;
                 var linenumber = 0;
                 bool validRecord = false;
-                string currentBSRecord;
+                string currentBSRecord = "";
+                var currentOrigin = "";
+                var fileManager = new OutputFileManager("s:\\out");
 
                 foreach (var line in File.ReadLines(filename))
                 {
@@ -149,7 +151,10 @@ namespace Tt1
                         {
                             var tiploc = line.Substring(2, 7);
                             var crs = line.Substring(53, 3);
-                            tipLocToCrs.Add(tiploc, crs);
+                            if (crs.All(c=>char.IsLetterOrDigit(c)))
+                            {
+                                tipLocToCrs.Add(tiploc, crs);
+                            }
                         }
                         else if (line.Substring(0, 2) == "BS")
                         {
@@ -165,15 +170,27 @@ namespace Tt1
                         {
                             if (line.Substring(0, 2) == "LO")
                             {
+                                var tiploc = line.Substring(2, 7);
+                                var dictresult = tipLocToCrs.TryGetValue(tiploc, out currentOrigin);
+                                if (!dictresult)
+                                {
+                                    validRecord = false;
+                                    continue;
+                                }
+                                fileManager.WriteLine(currentOrigin, currentBSRecord);
+                                fileManager.WriteLine(currentOrigin, line);
                             }
                             else if (line.Substring(0, 2) == "LI")
                             {
+                                fileManager.WriteLine(currentOrigin, line);
                             }
                             else if (line.Substring(0, 2) == "CR")
                             {
+                                fileManager.WriteLine(currentOrigin, line);
                             }
                             else if (line.Substring(0, 2) == "LT")
                             {
+                                fileManager.WriteLine(currentOrigin, line);
                                 validRecord = false;
                             }
                         }
