@@ -15,6 +15,17 @@ namespace Tt1
             _streamDict = new Dictionary<string, FileStream>();
         }
 
+        public void WriteRun(IEnumerable<string> runLines, IEnumerable<string> crsCodes)
+        {
+            foreach (var crs in crsCodes)
+            {
+                foreach (var line in runLines)
+                {
+                    WriteLine(crs, line);
+                }
+            }
+        }
+
         public void WriteLine(string crsCode, string line)
         {
             var result = _streamDict.TryGetValue(crsCode, out var filestream);
