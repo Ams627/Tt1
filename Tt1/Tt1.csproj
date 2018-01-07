@@ -23,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>7.2</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -47,9 +48,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BSRecord.cs" />
+    <Compile Include="CrsCodec.cs" />
+    <Compile Include="Days.cs" />
     <Compile Include="OutputFileManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimetableTime.cs" />
+    <Compile Include="TrainActivities.cs" />
+    <Compile Include="TrainUID.cs" />
+    <Compile Include="TTUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
